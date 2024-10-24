@@ -1,11 +1,11 @@
 import { isEmpty, isEmptyArray, isNullOrUndefined } from './index'
 
 // 👉 Required Validator
-export const requiredValidator = (value: unknown) => {
-  if (isNullOrUndefined(value) || isEmptyArray(value) || value === false)
-    return 'This field is required'
+export const requiredValidator = (value: unknown, fieldName: string) => {
+  if (isNullOrUndefined(value) || isEmptyArray(value) || value === false || value==='')
+    return `${fieldName} field is required`;
 
-  return !!String(value).trim().length || 'This field is required'
+  return !!String(value).trim().length || `${fieldName} field is required`
 }
 
 // 👉 Email Validator
@@ -91,12 +91,25 @@ export const urlValidator = (value: unknown) => {
 }
 
 // 👉 Length Validator
-export const lengthValidator = (value: unknown, length: number) => {
-  if (isEmpty(value))
-    return true
+// for min and max character of a field
+export const lengthValidator = (
+  value: string,
+  minLength: number,
+  maxLength: number,
+  field: string
+) => {
+  /**
+   * @param value: value of the field
+   * @param minLength: min length required
+   * @param maxLength: max length required
+   */
+  if (isEmpty(value)) return true;
 
-  return String(value).length === length || `The Min Character field must be at least ${length} characters`
-}
+  if (value.length < minLength && minLength !== 0)
+    return `The ${field} must be at least ${minLength} characters`;
+  else if (value.length > maxLength)
+    return `The ${field} may not be greater than ${maxLength} characters`;
+};
 
 // 👉 Alpha-dash Validator
 export const alphaDashValidator = (value: unknown) => {

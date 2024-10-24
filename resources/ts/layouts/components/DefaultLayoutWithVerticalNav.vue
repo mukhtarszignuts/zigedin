@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import navItems from '@/navigation/vertical'
+import { adminNavItems, managerNavItems , customerNavItems } from '@/navigation/vertical';
 import { useThemeConfig } from '@core/composable/useThemeConfig'
+import CryptoJs from 'crypto-js';
 
 // Components
 import Footer from '@/layouts/components/Footer.vue'
@@ -12,6 +13,13 @@ import { VerticalNavLayout } from '@layouts'
 
 const { appRouteTransition, isLessThanOverlayNavBreakpoint } = useThemeConfig()
 const { width: windowWidth } = useWindowSize()
+
+
+const encryptedData = localStorage.getItem('user-data')
+const user = encryptedData ? JSON.parse(CryptoJs.AES.decrypt(encryptedData || '', import.meta.env.VITE_CRYPTO_SECURE_KEY).toString(CryptoJs.enc.Utf8)) : null
+
+const navItems = user.role==='A'?adminNavItems: user.role === 'E' ? managerNavItems:customerNavItems
+
 </script>
 
 <template>

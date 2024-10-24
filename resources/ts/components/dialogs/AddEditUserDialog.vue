@@ -31,6 +31,7 @@ interface Emit {
   (e: "userData", value: any): void;
   (e: "closeDialog", value: boolean): void;
 }
+
 interface Props {
   isDrawerOpen?: boolean;
   roles?: object[];
@@ -122,9 +123,7 @@ const onSubmit = () => {
         profile_image: profile_image?.value,
         isUpdate: props?.userData?.id ? true : null,
       };
-
       console.log("userData", emitObj);
-
       emit("userData", emitObj);
       refForm.value?.reset();
     }
@@ -139,10 +138,10 @@ watchEffect(() => {
     email.value = props?.userData?.email;
     phone.value = props?.userData?.phone;
     role.value = props?.userData?.role;
+    city.value = props?.userData?.city;
     is_active.value = props?.userData?.is_active;
     headline.value = props?.userData?.headline;
     summary.value = props?.userData?.summary;
-
     preview.value = props?.userData?.image_url;
   }
 });
@@ -163,6 +162,7 @@ onMounted(() => {
 
 <template>
   <VDialog v-model="props.isDrawerOpen" max-width="600" @update:is-drawer-open="emit('closeDialog', false)">
+    <DialogCloseBtn @click="emit('closeDialog', false)" />
     <!-- Dialog Content -->
     <VCard :title="title + ' User Profile'">
       <VCardText class="d-flex">
@@ -222,17 +222,18 @@ onMounted(() => {
             <VCol cols="12">
               <AppTextField v-model="summary" label="Summary" type="text" />
             </VCol>
-            <VCol cols="12">
-              <AppTextField v-model="industry" label="Industry" type="text" />
-            </VCol>
-            <VCol cols="12">
-              <AppTextField v-model="location" label="Location (Optional)" type="text" />
-            </VCol>
-            <VCol cols="12">
-              <AppTextField v-model="website" label="website (Optional)" type="text" />
-            </VCol>
+           
+              <VCol cols="12" v-if="role==='E'">
+                <AppTextField v-model="industry" label="Industry" type="text" />
+              </VCol>
+              <VCol cols="12" v-if="role==='E'">
+                <AppTextField v-model="location" label="Location (Optional)" type="text" />
+              </VCol>
+              <VCol cols="12" v-if="role==='E'">
+                <AppTextField v-model="website" label="website (Optional)" type="text" />
+              </VCol>
 
-            <VCol cols="6">
+            <VCol cols="6" v-if="props.roles?.length">
               <AppSelect v-model="role" label="Select Role" :items="props.roles" item-title="name" item-value="id"
                 placeholder="Select Role" clearable :rules="[requiredValidator(role, 'role')]" />
             </VCol>
@@ -241,13 +242,7 @@ onMounted(() => {
         </VCardText>
 
         <VCardText class="d-flex justify-end flex-wrap gap-2">
-          <!-- <VBtn variant=" tonal" color="secondary" @click="emit('closeDialog', false)">
-                    Close
-                    </VBtn>
-                    <VBtn @click="emit('closeDialog', false)">
-                        Save
-                    </VBtn> -->
-
+       
           <VBtn v-if="props?.isLoading" loading="white" class="mx-2" />
           <VBtn v-else type="submit" class="mx-2">
             {{ props?.isEdit ? "Save" : "Submit" }}

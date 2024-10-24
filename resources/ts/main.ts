@@ -12,7 +12,7 @@ import { createApp } from 'vue'
 import Vue3Toasity, { type ToastContainerOptions } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import VueCryptojs from 'vue-cryptojs'
-
+import { createHead } from '@vueuse/head';
 
 const toastConfig = {
     autoClose: 2000,
@@ -28,8 +28,10 @@ loadFonts()
 
 // Create vue app
 const app = createApp(App)
+const head = createHead();
 
 // Use plugins
+app.use(head);
 app.use(vuetify)
 app.use(createPinia())
 app.use(router)

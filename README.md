@@ -38,3 +38,9 @@ npm run build
 ```sh 
 npm install vue-cryptojs
 ```
+
+## install moment 
+```sh 
+npm install moment --save
+```
+

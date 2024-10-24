@@ -12,8 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('job_skills', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->unsignedBigInteger('job_id'); // Foreign key to users table
+            $table->unsignedBigInteger('skill_id'); // Foreign key to skills table
+
+            // Foreign key constraints
+            $table->foreign('job_id')->references('id')->on('jobs')->onDelete('cascade');
+            $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
+
+            // Composite primary key
+            $table->primary(['job_id', 'skill_id']);
         });
     }
 

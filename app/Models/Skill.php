@@ -15,6 +15,12 @@ class Skill extends Model
         'name',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_skills', 'skill_id', 'user_id');

@@ -10,7 +10,7 @@ class Education extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $table = 'educations';
+    protected $table = 'education';
 
     protected $fillable = [
         'user_id',
@@ -22,6 +22,12 @@ class Education extends Model
         'description',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+    
     // Define relationships
     public function user()
     {

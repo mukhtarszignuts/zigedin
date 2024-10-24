@@ -49,7 +49,7 @@ function sendLink() {
 }
 
 useHead({
-  title:'Laravel-Vue | Forgot Password'
+  title:'ZigedIn | Forgot Password'
 })
 </script>
 

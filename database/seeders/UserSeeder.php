@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
 
         $users = [
             [
-                'name'              => 'Admin',
+                'first_name'        => 'Admin',
                 'email'             => config('constant.ADMIN_EMAIL'),
                 'password'          => Hash::make(config('constant.ADMIN_PASSWORD')),
                 'phone'             => '1234567890',

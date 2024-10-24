@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade'); // Foreign key to users table
             $table->text('content'); // TEXT for message content
             $table->timestamp('sent_at'); // TIMESTAMP for when the message was sent
+            $table->boolean('is_attachment')->default(false); // Flag to indicate if the message has an attachment
             $table->timestamps(); // Created at and updated at 
             $table->softDeletes();
         });

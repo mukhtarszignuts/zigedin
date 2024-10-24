@@ -36,9 +36,9 @@ const logout = ()=>{
 onMounted(() => {
   const encryptedData = localStorage.getItem('user-data')
   const userData = encryptedData ? JSON.parse(CryptoJs.AES.decrypt(encryptedData || '', import.meta.env.VITE_CRYPTO_SECURE_KEY).toString(CryptoJs.enc.Utf8)) : null
-  if (userData) {
-    name.value = userData.name
-    role.value = userData.role === 'A' ? 'Admin' : (userData.role === 'M' ? 'Manager' : 'Customer')
+  if (userData) { 
+    name.value = `${userData.first_name} ${userData.last_name}`
+    role.value = userData.role === 'A' ? 'Admin' : (userData.role === 'E' ? 'Employer' : 'Candidate')
     ProfileImage.value = userData.profile_image
     // console.log('userData',userData);
   }

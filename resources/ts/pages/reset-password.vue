@@ -74,7 +74,7 @@ const updatePassword = async () => {
 onMounted(checkUrl)
 
 useHead({
-  title:'Laravel-Vue | Reset Password'
+  title:'ZigedIn | Reset Password'
 })
 
 </script>

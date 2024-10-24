@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Message extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'messages';
 
@@ -16,6 +16,7 @@ class Message extends Model
         'sender_id',
         'receiver_id',
         'content',
+        'is_attachment',
         'sent_at',
     ];
 
@@ -28,5 +29,10 @@ class Message extends Model
     public function receiver()
     {
         return $this->belongsTo(User::class, 'receiver_id');
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class, 'message_id');
     }
 }

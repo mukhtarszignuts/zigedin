@@ -9,10 +9,15 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    About: typeof import('./resources/ts/components/profile/About.vue')['default']
+    ActivityTimeline: typeof import('./resources/ts/components/profile/ActivityTimeline.vue')['default']
     AddAuthenticatorAppDialog: typeof import('./resources/ts/components/dialogs/AddAuthenticatorAppDialog.vue')['default']
     AddEditAddressDialog: typeof import('./resources/ts/components/dialogs/AddEditAddressDialog.vue')['default']
+    AddEditEducationDialog: typeof import('./resources/ts/components/dialogs/AddEditEducationDialog.vue')['default']
     AddEditPermissionDialog: typeof import('./resources/ts/components/dialogs/AddEditPermissionDialog.vue')['default']
     AddEditRoleDialog: typeof import('./resources/ts/components/dialogs/AddEditRoleDialog.vue')['default']
+    AddEditSkillDialog: typeof import('./resources/ts/components/dialogs/AddEditSkillDialog.vue')['default']
+    AddEditUserDialog: typeof import('./resources/ts/components/dialogs/AddEditUserDialog.vue')['default']
     AppAutocomplete: typeof import('./resources/ts/@core/components/app-form-elements/AppAutocomplete.vue')['default']
     AppBarSearch: typeof import('./resources/ts/@core/components/AppBarSearch.vue')['default']
     AppCardActions: typeof import('./resources/ts/@core/components/cards/AppCardActions.vue')['default']
@@ -33,6 +38,7 @@ declare module '@vue/runtime-core' {
     CardStatisticsVertical: typeof import('./resources/ts/@core/components/cards/CardStatisticsVertical.vue')['default']
     CardStatisticsVerticalSimple: typeof import('./resources/ts/@core/components/CardStatisticsVerticalSimple.vue')['default']
     ConfirmDialog: typeof import('./resources/ts/components/dialogs/ConfirmDialog.vue')['default']
+    Connection: typeof import('./resources/ts/components/profile/Connection.vue')['default']
     CreateAppDialog: typeof import('./resources/ts/components/dialogs/CreateAppDialog.vue')['default']
     CustomCheckboxes: typeof import('./resources/ts/@core/components/app-form-elements/CustomCheckboxes.vue')['default']
     CustomCheckboxesWithIcon: typeof import('./resources/ts/@core/components/app-form-elements/CustomCheckboxesWithIcon.vue')['default']
@@ -348,6 +354,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollToTop: typeof import('./resources/ts/@core/components/ScrollToTop.vue')['default']
+    SelectBox: typeof import('./resources/ts/components/SelectBox.vue')['default']
     ShareProjectDialog: typeof import('./resources/ts/components/dialogs/ShareProjectDialog.vue')['default']
     Shortcuts: typeof import('./resources/ts/@core/components/Shortcuts.vue')['default']
     TheCustomizer: typeof import('./resources/ts/@core/components/TheCustomizer.vue')['default']

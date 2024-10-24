@@ -12,11 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('connections', function (Blueprint $table) {
-            $table->id(); // Auto-incrementing BIGINT primary key
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key to users table
-            $table->foreignId('connection_id')->constrained('users')->onDelete('cascade'); // Foreign key to users table
-            $table->enum('status', ['A', 'P', 'R']); // ENUM for connection status: Accepted, Pending, Rejected
-            $table->timestamps(); // Created at and updated at timestamps
+            $table->unsignedBigInteger('user_id'); // Foreign key to users table
+            $table->unsignedBigInteger('connection_id'); // Foreign key to skills table
+            $table->enum('status', ['A', 'P', 'R'])->default('P'); // ENUM for connection status: Accepted, Pending, Rejected
+            $table->datetime('request_date')->nullable();
+
+            // Foreign key constraints
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('connection_id')->references('id')->on('users')->onDelete('cascade');
+
+            // Composite primary key
+            $table->primary(['user_id', 'connection_id']);
         });
     }
 

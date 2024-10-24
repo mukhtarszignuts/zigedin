@@ -8,17 +8,26 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WorkExperience extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
-    protected $table = 'work_experience';
+    protected $table = 'work_experiences';
 
     protected $fillable = [
         'user_id',
-        'job_title',
+        'title',
         'company_name',
+        'employment_type',
         'start_date',
         'end_date',
         'description',
+        'location',
+        'location_type',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     // Define relationships

@@ -1,187 +1,111 @@
 <script setup lang="ts">
-import { VForm } from 'vuetify/components/VForm'
+import headerBG from "@images/pages/user-profile-header-bg.png";
+import useUserData from "@/composable/useFetchUserData";
+import { useHead } from "@vueuse/head";
+import avatar1 from '@images/avatars/avatar-1.png';
+// resources/images/avatars/avatar-1.png
 
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
-import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
-import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
-import authV2LoginIllustrationBorderedLight from '@images/pages/auth-v2-login-illustration-bordered-light.png'
-import authV2LoginIllustrationDark from '@images/pages/auth-v2-login-illustration-dark.png'
-import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustration-light.png'
-import authV2MaskDark from '@images/pages/misc-mask-dark.png'
-import authV2MaskLight from '@images/pages/misc-mask-light.png'
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
-import { themeConfig } from '@themeConfig'
+// import moment from "moment";
+// import axios from "@/plugins/axios";
 
-const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV2LoginIllustrationDark, authV2LoginIllustrationBorderedLight, authV2LoginIllustrationBorderedDark, true)
 
-const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
+const isLoading = ref<boolean>(false);
 
-const isPasswordVisible = ref(false)
+const role = ref<string>("");
 
-const refVForm = ref<VForm>()
-const email = ref('admin@demo.com')
-const password = ref('admin')
-const rememberMe = ref(false)
+const { fetchUserData } = useUserData();
+
+onMounted(() => {
+  const userData = fetchUserData();
+  if (userData) {
+    console.log(userData);
+    
+  } 
+});
+
+useHead({
+  title: "zigedin | Dashboard",
+});
 </script>
-
 <template>
-  <VRow
-    no-gutters
-    class="auth-wrapper bg-surface"
-  >
-    <VCol
-      lg="8"
-      class="d-none d-lg-flex"
-    >
-      <div class="position-relative bg-background rounded-lg w-100 ma-8 me-0">
-        <div class="d-flex align-center justify-center w-100 h-100">
-          <VImg
-            max-width="505"
-            :src="authThemeImg"
-            class="auth-illustration mt-16 mb-2"
+<div>
+      <VCard  class="mb-5">
+      <VImg :src="headerBG" min-height="125" max-height="250" cover />
+
+      <VCardText
+        class="d-flex align-bottom flex-sm-row flex-column justify-center gap-x-5"
+      >
+        <div class="d-flex h-0">
+          <VAvatar
+            rounded
+            size="120"
+            :src="avatar1"
+            class="user-profile-avatar mx-auto"
           />
         </div>
 
-        <VImg
-          :src="authThemeMask"
-          class="auth-footer-mask"
-        />
-      </div>
-    </VCol>
+        <div class="user-profile-info w-100 mt-16 pt-6 pt-sm-0 mt-sm-0">
+          <h6 class="text-h6 text-center text-sm-start font-weight-medium mb-3">
+            hghg
+          </h6>
 
-    <VCol
-      cols="12"
-      lg="4"
-      class="auth-card-v2 d-flex align-center justify-center"
-    >
-      <VCard
-        flat
-        :max-width="500"
-        class="mt-12 mt-sm-0 pa-4"
-      >
-        <VCardText>
-          <VNodeRenderer
-            :nodes="themeConfig.app.logo"
-            class="mb-6"
-          />
-
-          <h5 class="text-h5 mb-1">
-            Welcome to <span class="text-capitalize"> {{ themeConfig.app.title }} </span>! 👋🏻
-          </h5>
-
-          <p class="mb-0">
-            Please sign-in to your account and start the adventure
-          </p>
-        </VCardText>
-
-        <VCardText>
-          <VAlert
-            color="primary"
-            variant="tonal"
+          <div
+            class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-4"
           >
-            <p class="text-caption mb-2">
-              Admin Email: <strong>admin@demo.com</strong> / Pass: <strong>admin</strong>
-            </p>
+            <div
+              class="d-flex flex-wrap justify-center justify-sm-start flex-grow-1 gap-2"
+            >
+              <span class="d-flex">
+                <VIcon size="20" icon="tabler-user" class="me-1" />
+                <span class="text-body-1">
+                  
+                </span>
+              </span>
+              <span class="d-flex">
+                <VIcon size="20" icon="tabler-users-group" class="me-1" />
+                <span class="text-body-1">
+                 
+                </span>
+              </span>
 
-            <p class="text-caption mb-0">
-              Client Email: <strong>client@demo.com</strong> / Pass: <strong>client</strong>
-            </p>
-          </VAlert>
-        </VCardText>
-
-        <VCardText>
-          <VForm
-            ref="refVForm"
-            @submit="() => { }"
-          >
-            <VRow>
-              <!-- email -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="email"
-                  label="Email"
-                  type="email"
-                  autofocus
-                />
-              </VCol>
-
-              <!-- password -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="password"
-                  label="Password"
-                  :type="isPasswordVisible ? 'text' : 'password'"
-                  :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
-                  @click:append-inner="isPasswordVisible = !isPasswordVisible"
-                />
-
-                <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-4">
-                  <VCheckbox
-                    v-model="rememberMe"
-                    label="Remember me"
-                  />
-                  <a
-                    class="text-primary ms-2 mb-1"
-                    href="#"
+              <span class="d-flex align-center">
+                <VIcon size="20" icon="tabler-star" class="me-2" />
+                <span class="text-body-1">
+                  <VChip
+                    label
+                    size="small"
+                    class="text-capitalize"
                   >
-                    Forgot Password?
-                  </a>
-                </div>
+                    
+                  </VChip>
+                </span>
+              </span>
 
-                <VBtn
-                  block
-                  type="submit"
-                >
-                  Login
-                </VBtn>
-              </VCol>
+              <span class="d-flex align-center">
+                <VIcon size="20" icon="tabler-mail" class="me-2" />
+                <span class="text-body-1">
+                 
+                </span>
+              </span>
+              <span class="d-flex align-center">
+                <VIcon size="20" icon="tabler-phone" class="me-2" />
+                <span class="text-body-1">
+               
+                </span>
+              </span>
 
-              <!-- create account -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
-                <span>New on our platform?</span>
+              <span class="d-flex align-center">
+                <VIcon size="20" icon="tabler-calendar" class="me-2" />
+                <span class="text-body-1">
+                 
+                </span>
+              </span>
+            </div>
 
-                <a
-                  class="text-primary ms-2"
-                  href="#"
-                >
-                  Create an account
-                </a>
-              </VCol>
-
-              <VCol
-                cols="12"
-                class="d-flex align-center"
-              >
-                <VDivider />
-
-                <span class="mx-4">or</span>
-
-                <VDivider />
-              </VCol>
-
-              <!-- auth providers -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
-                <AuthProvider />
-              </VCol>
-            </VRow>
-          </VForm>
-        </VCardText>
-      </VCard>
-    </VCol>
-  </VRow>
+            <VBtn prepend-icon="tabler-edit" @click=""> Edit </VBtn>
+          </div>
+        </div>
+      </VCardText>
+    </VCard>
+    </div>
 </template>
-
-<style lang="scss">
-@use "@core-scss/template/pages/page-auth.scss";
-</style>
-
-<route lang="yaml">
-meta:
-  layout: blank
-</route>

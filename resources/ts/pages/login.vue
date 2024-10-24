@@ -64,7 +64,7 @@ const login = async () => {
         if (data.user) {
           isLoading.value = false
 
-          console.log(data.user.role)
+          console.log(data.user,'login data')
           
           localStorage.setItem('auth-token', data.token)
           // store userData to the local storage
@@ -108,7 +108,7 @@ const login = async () => {
 
 // change page title using this useHead
 useHead({
-  title: 'Vue-Laravel | Login',
+  title: 'ZigedIn | Login',
 })
 
 // for check remember me functionality
@@ -169,7 +169,7 @@ onMounted(() => {
                 <!-- email -->
                 <VCol cols="12">
                   <AppTextField v-model="loginData.email" label="Email" type="email" autofocus
-                    :rules="[requiredValidator(loginData.email, 'Email'), emailValidator]" />
+                    :rules="[requiredValidator(loginData.email,'Email'), emailValidator]" />
                 </VCol>
 
                 <!-- password -->

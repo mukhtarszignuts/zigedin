@@ -54,7 +54,7 @@ class User extends Model
     ];
 
     // apend value 
-    protected $appends = ['image_url','connection_count'];
+    protected $appends = ['image_url', 'connection_count'];
 
     public function getImageUrlAttribute()
     {
@@ -68,6 +68,11 @@ class User extends Model
         return $this->belongsToMany(Skill::class, 'user_skills', 'user_id', 'skill_id');
     }
 
+    public function experiences()
+    {
+        return $this->hasMany(WorkExperience::class);
+    }
+
     // employer 
     public function employer()
     {
@@ -77,7 +82,13 @@ class User extends Model
     // connection 
     public function connections()
     {
-        return $this->belongsToMany(User::class, 'connections', 'user_id', 'connection_id')->withPivot('status', 'request_date')->select('id','first_name','last_name','profile_image');
+        return $this->belongsToMany(User::class, 'connections', 'user_id', 'connection_id')->withPivot('status', 'request_date')->select('id', 'first_name', 'last_name', 'profile_image');
+    }
+
+    // invite connection 
+    public function inviteConnections()
+    {
+        return $this->belongsToMany(User::class, 'connections', 'connection_id', 'user_id')->withPivot('status', 'request_date')->select('id', 'first_name', 'last_name', 'profile_image');
     }
 
     // connection count 
@@ -92,9 +103,9 @@ class User extends Model
         return $this->hasMany(Education::class);
     }
 
-     // Relationship for posts authored by the user
-     public function posts()
-     {
-         return $this->hasMany(Post::class, 'user_id');
-     }
+    // Relationship for posts authored by the user
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'user_id');
+    }
 }

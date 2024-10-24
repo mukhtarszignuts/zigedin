@@ -49,19 +49,23 @@ const register = async () => {
         isLoading.value = true
         
         const input = {
-          name: registerData.value.name,
+          first_name: registerData.value.first_name,
+          last_name: registerData.value.last_name,
           phone: registerData.value.phone,
           city: registerData.value.city,
           email: registerData.value.email,
           password: registerData.value.password,
           confirm_password: registerData.value.confirmPassword,
+          role:registerData.value.role??'C'
         }
 
         const { data } = await axios.post('registration', input)
         if (data) {
           router.push({ 
             name: 'login'
-          })
+          })  
+          refVForm.value.reset();
+          toast.success(data.message);
           isLoading.value = false
         }
       }
@@ -92,7 +96,7 @@ const onSubmit = () => {
 }
 
 useHead({
-  title:'Laravel-Vue | Registration'
+  title:'ZigedIn| Registration'
 })
 
 </script>
@@ -125,9 +129,13 @@ useHead({
           <VForm ref="refVForm" @submit.prevent="onSubmit">
             <VRow>
               <!-- Username -->
-              <VCol cols="12">
-                <AppTextField v-model="registerData.name" autofocus
-                  :rules="[requiredValidator(registerData.name,'Username'), alphaDashValidator]" label="Username" />
+              <VCol cols="6">
+                <AppTextField v-model="registerData.first_name" autofocus
+                  :rules="[requiredValidator(registerData.first_name,'first_name'), alphaDashValidator]" label="First Name" />
+              </VCol>
+              <VCol cols="6">
+                <AppTextField v-model="registerData.last_name" autofocus
+                  :rules="[requiredValidator(registerData.last_name,'last_name'), alphaDashValidator]" label="Last Name" />
               </VCol>
 
               <!-- email -->
