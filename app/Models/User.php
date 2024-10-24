@@ -19,7 +19,8 @@ class User extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'phone',
@@ -53,14 +54,12 @@ class User extends Model
     ];
 
     // apend value 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url','connection_count'];
 
     public function getImageUrlAttribute()
     {
-        if ($this->image) {
+        if ($this->profile_image) {
             return asset('storage/profile_images/' . $this->profile_image);
-        } else {
-            return $this->images[0]->image_url ?? null;
         }
     }
 
@@ -68,4 +67,34 @@ class User extends Model
     {
         return $this->belongsToMany(Skill::class, 'user_skills', 'user_id', 'skill_id');
     }
+
+    // employer 
+    public function employer()
+    {
+        return $this->hasOne(Employer::class);
+    }
+
+    // connection 
+    public function connections()
+    {
+        return $this->belongsToMany(User::class, 'connections', 'user_id', 'connection_id')->withPivot('status', 'request_date')->select('id','first_name','last_name','profile_image');
+    }
+
+    // connection count 
+    public function getConnectionCountAttribute()
+    {
+        return $this->connections()->count();
+    }
+
+    // educations  
+    public function educations()
+    {
+        return $this->hasMany(Education::class);
+    }
+
+     // Relationship for posts authored by the user
+     public function posts()
+     {
+         return $this->hasMany(Post::class, 'user_id');
+     }
 }

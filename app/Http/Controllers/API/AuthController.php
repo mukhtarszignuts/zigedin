@@ -43,7 +43,8 @@ class AuthController extends Controller
     public function registration(Request $request)
     {
         $request->validate([
-            'name'      => 'required|string',
+            'first_name'=> 'required|string',
+            'last_name' => 'nullable|string',
             'role'      => 'required|in:A,E,C',
             'email'     => 'required|email|unique:users,email|regex:/(.+)@(.+)\.(.+)/i',
             'phone'     => 'nullable',
@@ -51,7 +52,7 @@ class AuthController extends Controller
             'city'      => 'nullable|string',
         ]);
 
-        $data = $request->only('name', 'email', 'phone', 'password', 'city', 'headline','summary','role');
+        $data = $request->only('first_name','last_name', 'email', 'phone', 'password', 'city', 'headline','summary','role');
         $data['password'] = Hash::make($data['password']);
 
         User::create($data);
