@@ -62,7 +62,7 @@ class SkillController extends Controller
             }
         }
 
-        return ok('Skill created successfully.', $skill);
+        return ok('Skill Added successfully.', $skill);
     }
 
     /**

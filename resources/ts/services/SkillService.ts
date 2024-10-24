@@ -19,15 +19,11 @@ export const AddEditSkill = async (params:any , isUpdate:boolean) => {
   try {
     
     if(isUpdate){
-      const {
-        data: { data },
-      } = await $http.post('skill/update',params);
+      const data = await $http.post('skill/update',params);
       return data;
     }else{
 
-      const {
-        data: { data },
-      } = await $http.post('skill/create',params);
+      const data = await $http.post('skill/create',params);
 
       return data;
     }
@@ -39,9 +35,7 @@ export const AddEditSkill = async (params:any , isUpdate:boolean) => {
 
 export const deleteSkill = async (Id:number) => {
   try {
-    const {
-      data: { data },
-    } = await $http.get(`skill/delete/${Id}`);
+    const data = await $http.get(`skill/delete/${Id}`);
     return data;
   } catch (e) {
     console.error("Error Delete Skill :", e);

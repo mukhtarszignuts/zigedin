@@ -12,12 +12,8 @@ import UserEducation from "./profile/UserEducation.vue";
 import UserSkills from "./profile/UserSkills.vue";
 import { useUserData } from '@/store/getUserData';
 import AddEditUserDialog from '@/components/dialogs/AddEditUserDialog.vue';
-import { toast } from 'vue3-toastify';
 import { AddEditUser } from '@/services/UserService';
 import { connectionRequest } from '@/services/ConnectionService';
-import AddEditSkillDialog from '@/components/dialogs/AddEditSkillDialog.vue';
-import { AddEditSkill , deleteSkill } from '@/services/SkillService';
-
 
 
 // tabs
@@ -30,11 +26,6 @@ const tabs = [
 
 const activeTab = ref("profile");
 const isAddNewUserDrawerVisible = ref<boolean>(false);
-const isSkillDialogvisiable = ref<boolean>(false);
-const isLoading = ref<boolean>(false);
-const isEdit = ref<boolean>(false);
-const isDelete = ref<boolean>(false);
-const skillData = ref([]);
 
 const user = useUserData()
 const { getUserDetails } = useUserData()
@@ -88,53 +79,11 @@ const AddNewUser = async (userData: any) => {
   }
 };
 
-// 👉 Add Edit Skill
-const AddNewSkill = async (skillData:any)=>{
-  try {
-    isLoading.value = true;
-    const data = await AddEditSkill(skillData,skillData.isUpdate)
-    if(data){
-      isSkillDialogvisiable.value = false
-      isLoading.value = false;
-      isEdit.value = false
-    }
-    await getUserDetails() 
-    
-  } catch (error) {
-    console.log(error);
-    isLoading.value = false;
-    isEdit.value = false
-  }
-  
-}
+
 
 const handleRequest = async (item:any) =>{
   const data = await connectionRequest(item)
   await getUserDetails() 
-  
-}
-
-const EditSkill = (skill:any) =>{
-  if(skill!=true){
-    skillData.value = skill
-    isEdit.value = true
-  }else{
-    skillData.value = []
-    isEdit.value = false
-  }
-  isSkillDialogvisiable.value = true
-}
-
-const DeleteSkill = async (id:number) =>{
-  try {
-    const data = await deleteSkill(id)
-    console.log('delete id',id);
-    isSkillDialogvisiable.value = false
-    await getUserDetails() 
-  } catch (error) {
-    console.log(error);
-    isSkillDialogvisiable.value = false
-  }
   
 }
 
@@ -223,8 +172,7 @@ useHead({
               :connections-data="profileData?.invite_connections" @view-all="changetab"
               @handle-request="handleRequest" />
 
-            <UserSkills :skills-data="profileData?.skills" @update:is-drawer-open="EditSkill" @skill-data="EditSkill"
-              @delete-skill="DeleteSkill" />
+            <UserSkills :skills-data="profileData?.skills"  @refresh="refresh"/>
 
             <UserEducation :educations-data="profileData?.educations" @refresh="refresh" />
           </VCol>
@@ -242,11 +190,6 @@ useHead({
     <!-- profile Dialog -->
     <AddEditUserDialog v-if="isAddNewUserDrawerVisible" :is-drawer-open="isAddNewUserDrawerVisible"
       @close-dialog="isAddNewUserDrawerVisible = false" @user-data="AddNewUser" :user-data="profileData" />
-
-    <!-- Skill Dialog -->
-    <AddEditSkillDialog v-if="isSkillDialogvisiable" :is-drawer-open="isSkillDialogvisiable" :is-edit="isEdit"
-      :is-loading="isLoading" @close-dialog="isSkillDialogvisiable=false" @skill-data="AddNewSkill"
-      :skill-data="skillData" />
 
   </div>
 </template>
