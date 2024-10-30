@@ -31,12 +31,14 @@ const isEdit = ref<boolean>(false);
 const isDelete = ref<boolean>(false);
 const skillData = ref([]);
 
-const DeleteSkill = async (id:number) =>{
+const DeleteSkill = async (id:any) =>{
   try {
-    const data = await deleteSkill(id)
-    toast.success(data.data.message);
-    isSkillDialogvisiable.value = false 
-    emit('refresh',true)
+    const data = await deleteSkill(id);
+    if(data){
+      toast.success(data?.data.message);
+      isSkillDialogvisiable.value = false 
+      emit('refresh',true)
+    }
   } catch (error) {
     console.log(error);
     emit('refresh',true)
@@ -67,13 +69,8 @@ const AddNewSkill = async (skillData:any)=>{
 }
 
 const EditSkill = (skill:any) =>{
-  if(skill!=true){
-    skillData.value = skill
-    isEdit.value = true
-  }else{
-    skillData.value = []
-    isEdit.value = false
-  }
+  skillData.value = skill
+  isEdit.value = true
   isSkillDialogvisiable.value = true
 }
 
@@ -85,7 +82,7 @@ const EditSkill = (skill:any) =>{
       <template #append>
         <div class="me-n2">
           <VBtn icon size="30" class="rounded" :variant="'tonal'" :color="'primary'"
-            @click="isSkillDialogvisiable = true">
+            @click="(isSkillDialogvisiable = true),(isEdit=false),(skillData=[])">
             <VIcon size="20" :icon="'tabler-plus'" />
           </VBtn>
           <!-- <VBtn icon size="30" :variant="'undefinded'" :color="'secondary'" @click="emit('update:isDrawerOpen',true)">

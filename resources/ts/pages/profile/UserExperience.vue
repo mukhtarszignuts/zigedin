@@ -2,6 +2,12 @@
 import avatar2 from '@images/avatars/avatar-2.png'
 import building from '@images/building.png';
 import moment from 'moment';
+import useFormatting from "@/composable/useFormatting";
+import AddEditExperienceDialog from '@/components/dialogs/AddEditExperienceDialog.vue'
+import { toast } from 'vue3-toastify';
+import { AddEditExperience , deleteExperience } from '@/services/ExperienceService';
+
+
 
 interface ProfileExperience{
   id?:number, 
@@ -19,9 +25,73 @@ interface Props {
   experienceData:ProfileExperience | any
 }
 
+interface Emit{
+  (e: "refresh", value: boolean): void;
+}
+
+// props
 const props = defineProps<Props>();
 
+// Emit
+const emit = defineEmits<Emit>();
 
+const { empOptionsVariant,formatDateRange } = useFormatting();
+
+const isExperienceDialogVisible = ref<boolean>(false)
+const isLoading = ref<boolean>(false)
+const isEdit = ref<boolean>(false)
+const expData = ref<ProfileExperience[]>([])
+
+const AddEditExp = async (experience:any) => {
+  try {
+    
+    const data = await AddEditExperience(experience,experience.isUpdate);
+    if(data){
+      if(experience.isUpdate){
+        // Toast message 
+        toast.success('Experience Updated successfully..!')
+        isEdit.value = false
+        expData.value = []
+        
+      }else{
+        // Toast message 
+        toast.success('Experience added successfully..!')
+
+      }
+      isExperienceDialogVisible.value = false
+      isLoading.value = false
+
+      // calling emit
+      emit('refresh',true)
+    }
+    
+  } catch (error) {
+    console.log(error);
+    isExperienceDialogVisible.value = false
+    isLoading.value = false
+  }
+}
+
+const deleteExp = async (Id:any) => {
+  try {
+    const data = await deleteExperience(Id)
+    if(data){
+      toast.success(data?.data?.message)
+      emit('refresh',true)
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const EditExp = (item:any) =>{
+  if(item){
+    expData.value = item
+    isEdit.value = true
+    isExperienceDialogVisible.value = true
+    console.log(item,'edit exp clickable');
+  }
+}
 
 </script>
 
@@ -35,12 +105,10 @@ const props = defineProps<Props>();
       <VCardTitle>Experiences </VCardTitle>
 
       <template #append>
-        <div>
-          <MoreBtn :menu-list="[
-              { title: 'Share timeline', value: 'Share timeline' },
-              { title: 'Suggest edits', value: 'Suggest edits' },
-              { title: 'Report bug', value: 'Report bug' },
-            ]" />
+        <div class="">
+          <VBtn icon size="30" class="rounded" :variant="'tonal'" @click="isExperienceDialogVisible=true">
+            <VIcon size="20" :icon="'tabler-plus'" />
+          </VBtn>
         </div>
       </template>
     </VCardItem>
@@ -59,22 +127,39 @@ const props = defineProps<Props>();
           <VListItemTitle class="font-weight-medium">
             <VAvatar size="38" :variant="'tonal'" :color="'secondary'">
               <VImg :src="building" />
-            </VAvatar> {{ data }}
+            </VAvatar>
+            <!-- for company name -->
+            {{ data }}
           </VListItemTitle>
 
           <VTimeline density="compact" align="start" truncate-line="both" class="v-timeline-density-compact">
-            <VTimelineItem v-for="item in props.experienceData[data]" dot-color="warning" size="x-small">
+            <VTimelineItem v-for="item in props.experienceData[data]" dot-color="primary" size="x-small">
               <div class="d-flex justify-space-between align-center flex-wrap">
-                <span class="app-timeline-title">
+                <span class="app-timeline-title mb-1">
                   {{ item.title }}
                 </span>
-                <span class="app-timeline-meta">Today</span>
+                <span class="app-timeline-meta">
+                  <VBtn icon size="30" class="rounded me-2" :variant="'tonal' " :color="'error'"
+                    @click="deleteExp(item.id)">
+                    <VIcon size="20" :icon="'tabler-trash'" />
+                  </VBtn>
+                  <VBtn icon size="30" class="rounded" :variant="'tonal'" @click="EditExp(item)">
+                    <VIcon size="20" :icon="'tabler-edit'" />
+                  </VBtn>
+
+                </span>
               </div>
-              <p class="app-timeline-text mb-2">
-                Project meeting with john @10:15am
+              <p class="app-timeline-text mb-1">
+                {{ formatDateRange({ start_date: item.start_date, end_date: item.end_date }) }}
+              </p>
+              <p class="app-timeline-text mb-1">
+                {{ empOptionsVariant(item.employment_type).text }}
+              </p>
+              <p class="app-timeline-text mb-1">
+                {{ item.location }}
               </p>
 
-              <div class="d-flex align-center mt-3">
+              <!-- <div class="d-flex align-center mt-3">
                 <VAvatar size="38" class="me-3" :image="avatar2" />
                 <div>
                   <h6 class="text-sm font-weight-medium mb-n1">
@@ -84,7 +169,7 @@ const props = defineProps<Props>();
                     CEO of Infidel
                   </span>
                 </div>
-              </div>
+              </div> -->
             </VTimelineItem>
           </VTimeline>
           <!-- <VListItemSubtitle>{{ data.degree }} , {{ data.field_of_study}}</VListItemSubtitle>
@@ -100,7 +185,7 @@ const props = defineProps<Props>();
               <VIcon size="20" :icon="'tabler-edit'" />
             </VBtn>
           </template> -->
-          <v-divider></v-divider>
+          <v-divider />
         </VListItem>
       </VList>
 
@@ -179,4 +264,10 @@ const props = defineProps<Props>();
       </VTimeline> -->
     </VCardText>
   </VCard>
+
+  <!--Add Dialog Experience -->
+  <AddEditExperienceDialog v-if="isExperienceDialogVisible" :is-loading="isLoading"
+    :is-drawer-open="isExperienceDialogVisible" :is-edit="isEdit" :experience-data="expData"
+    @close-dialog="isExperienceDialogVisible=false" @experience-data="AddEditExp" />
+
 </template>

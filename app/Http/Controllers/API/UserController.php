@@ -145,7 +145,7 @@ class UserController extends Controller
 
         // Fetch experiences and group by company_name, ordered by created_at
         $experiences = WorkExperience::where('user_id', $id)
-            ->select('company_name', 'title', 'description', 'created_at')
+            ->select('id','company_name', 'title', 'description', 'created_at','start_date','end_date','location','employment_type')
             ->orderBy('created_at', 'desc')
             ->get()
             ->groupBy('company_name');

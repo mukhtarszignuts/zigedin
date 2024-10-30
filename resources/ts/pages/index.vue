@@ -14,6 +14,7 @@ import { useUserData } from '@/store/getUserData';
 import AddEditUserDialog from '@/components/dialogs/AddEditUserDialog.vue';
 import { AddEditUser } from '@/services/UserService';
 import { connectionRequest } from '@/services/ConnectionService';
+import { toast } from 'vue3-toastify';
 
 
 // tabs
@@ -26,6 +27,7 @@ const tabs = [
 
 const activeTab = ref("profile");
 const isAddNewUserDrawerVisible = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
 
 const user = useUserData()
 const { getUserDetails } = useUserData()
@@ -172,12 +174,12 @@ useHead({
               :connections-data="profileData?.invite_connections" @view-all="changetab"
               @handle-request="handleRequest" />
 
-            <UserSkills :skills-data="profileData?.skills"  @refresh="refresh"/>
+            <UserSkills :skills-data="profileData?.skills" @refresh="refresh" />
 
             <UserEducation :educations-data="profileData?.educations" @refresh="refresh" />
           </VCol>
           <VCol md="8" cols="12">
-            <UserExperience :experience-data="profileData?.experiences" />
+            <UserExperience :experience-data="profileData?.experiences" @refresh="refresh" />
           </VCol>
         </VRow>
       </VWindowItem>

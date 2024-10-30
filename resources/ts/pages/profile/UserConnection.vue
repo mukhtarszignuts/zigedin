@@ -55,7 +55,7 @@ const moreList = [
           <template #prepend>
             <VAvatar size="38" :variant="!data?.image_url ? 'tonal' : undefined" :color="'secondary'">
               <VImg v-if="data?.image_url" :src="data?.image_url" />
-              <span v-else>{{ avatarText(data?.first_name) }}</span>
+              <span class="" v-else>{{ avatarText(data?.first_name) }}</span>
             </VAvatar>
 
           </template>

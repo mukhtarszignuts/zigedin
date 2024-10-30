@@ -164,7 +164,7 @@ onMounted(async () => {
             <VCardTitle class="d-flex flex-column align-center justify-center">
               <VAvatar size="100" :variant="!data?.user?.image_url ? 'tonal' : 'elevated'" :color="'warning'">
                 <VImg v-if="data?.user?.image_url" :src="data?.user?.image_url" />
-                <span v-else>{{ avatarText(data?.user?.first_name) }}</span>
+                <span class="text-h5" v-else>{{ avatarText(data?.user?.first_name) }}</span>
               </VAvatar>
               <p class="mt-4 mb-0">
                 {{ data?.user?.first_name }} {{ data?.user?.last_name }}
@@ -228,7 +228,7 @@ onMounted(async () => {
             <VCardTitle class="d-flex flex-column align-center justify-center">
               <VAvatar size="100" :variant="!data?.friend?.image_url ? 'tonal' : 'elevated'" :color="'secondary'">
                 <VImg v-if="data?.friend?.image_url" :src="data?.friend?.image_url" />
-                <span v-else>{{ avatarText(data?.friend?.first_name) }}</span>
+                <h1 v-else>{{ avatarText(data?.friend?.first_name) }}</h1>
               </VAvatar>
               <p class="mt-4 mb-0">
                 {{ data?.friend?.first_name }} {{ data?.friend?.last_name }}
@@ -276,7 +276,7 @@ onMounted(async () => {
 
               <VAvatar size="100" :variant="!data?.image_url ? 'tonal' : 'elevated'" :color="'primary'">
                 <VImg v-if="data?.image_url" :src="data?.image_url" />
-                <span v-else>{{ avatarText(data?.first_name) }}</span>
+                <h1 v-else>{{ avatarText(data?.first_name) }}</h1>
               </VAvatar>
 
               <p class="mt-4 mb-0">
