@@ -75,14 +75,23 @@ onMounted(() => {
           <VDivider class="my-2" />
 
           <!-- 👉 Profile -->
-          
-          <VListItem
-            @click="router.push(['Customer'].includes(role) ? '/user/details' : '/admin/user/details')">
+
+          <VListItem @click="router.push(['Customer'].includes(role) ? '/user/details' : '/admin/user/details')">
             <template #prepend>
               <VIcon class="me-2" icon="tabler-user" size="22" />
             </template>
 
             <VListItemTitle>Profile</VListItemTitle>
+          </VListItem>
+
+          <!-- 👉 Profile -->
+
+          <VListItem @click="router.push('company')">
+            <template #prepend>
+              <VIcon class="me-2" icon="tabler-plus" size="22" />
+            </template>
+
+            <VListItemTitle>Create Page</VListItemTitle>
           </VListItem>
 
           <!-- Divider -->
