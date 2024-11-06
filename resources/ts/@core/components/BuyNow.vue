@@ -1,24 +1,21 @@
 <script lang="ts" setup>
 const vm = getCurrentInstance()
 
-const buyNowUrl = ref(vm?.appContext.config.globalProperties.buyNowUrl || 'https://1.envato.market/vuexy_admin')
+// const buyNowUrl = ref(vm?.appContext.config.globalProperties.buyNowUrl || 'https://1.envato.market/vuexy_admin')
 
-watch(buyNowUrl, val => {
-  if (vm)
-    vm.appContext.config.globalProperties.buyNowUrl = val
-})
+// watch(buyNowUrl, val => {
+//   if (vm)
+//     vm.appContext.config.globalProperties.buyNowUrl = val
+// })
+
+const isShareProjectDialogVisible = ref(false)
+
 </script>
 
 <template>
-  <VBtn
-    id="buy-now-btn"
-    color="error"
-    class="product-buy-now"
-    :href="buyNowUrl"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    Buy Now
+  <VBtn @click="isShareProjectDialogVisible = !isShareProjectDialogVisible"  color="error"
+    class="product-buy-now" rel="noopener noreferrer">
+    Chat Now
   </VBtn>
 </template>
 

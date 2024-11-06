@@ -15,9 +15,13 @@ class Message extends Model
     protected $fillable = [
         'sender_id',
         'receiver_id',
-        'content',
+        'message',
+        'unseen_msgs',
+        'feedback',
+        'is_sent',
+        'is_delivered',
+        'is_seen',
         'is_attachment',
-        'sent_at',
     ];
 
     // Define relationships

@@ -39,8 +39,27 @@ npm run build
 npm install vue-cryptojs
 ```
 
-## install moment 
+### install moment 
 ```sh 
 npm install moment --save
 ```
+
+### Install Reverb 
+```sh 
+composer require laravel/reverb
+```
+### Runing the server 
+```sh 
+php artisan reverb:start
+
+php artisan queue:work
+
+```
+
+### Laravel echo
+```sh
+npm install --save laravel-echo pusher-js
+```
+<!-- #### If you’re getting TypeScript errors related to Echo or Pusher, install the types for Pusher: -->
+<!-- npm install --save-dev @types/pusher-js -->
 

@@ -54,12 +54,19 @@ class User extends Model
     ];
 
     // apend value 
-    protected $appends = ['image_url', 'connection_count'];
+    protected $appends = ['image_url', 'connection_count','fullName'];
 
     public function getImageUrlAttribute()
     {
         if ($this->profile_image) {
             return asset('storage/profile_images/' . $this->profile_image);
+        }
+    }
+
+    public function getFullNameAttribute()
+    {
+        if ($this->first_name && $this->last_name) {
+            return $this->first_name.' '.$this->last_name;
         }
     }
 
@@ -107,5 +114,17 @@ class User extends Model
     public function posts()
     {
         return $this->hasMany(Post::class, 'user_id');
+    }
+
+    // Send Message 
+    public function sendMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    // Receiver Message 
+    public function receiveMessages()
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
     }
 }

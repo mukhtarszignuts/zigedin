@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -15,8 +16,12 @@ return new class extends Migration
             $table->id(); // Auto-incrementing BIGINT primary key
             $table->foreignId('sender_id')->constrained('users')->onDelete('cascade'); // Foreign key to users table
             $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade'); // Foreign key to users table
-            $table->text('content'); // TEXT for message content
-            $table->timestamp('sent_at'); // TIMESTAMP for when the message was sent
+            $table->text('message');
+            $table->integer('unseen_msgs')->nullable();
+            $table->json('feedback')->nullable();
+            $table->boolean('is_sent')->default(0);
+            $table->boolean('is_delivered')->default(0);
+            $table->boolean('is_seen')->default(0);
             $table->boolean('is_attachment')->default(false); // Flag to indicate if the message has an attachment
             $table->timestamps(); // Created at and updated at 
             $table->softDeletes();

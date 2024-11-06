@@ -64,5 +64,6 @@ const navItems = user.role==='A'?adminNavItems: user.role === 'E' ? managerNavIt
 
     <!-- 👉 Customizer -->
     <!-- <TheCustomizer /> -->
+    <ChatMessageDrawer />
   </VerticalNavLayout>
 </template>

@@ -8,7 +8,9 @@ use App\Http\Controllers\API\ConnectionController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\EducationController;
+use App\Http\Controllers\API\EmployerController;
 use App\Http\Controllers\API\JobController;
+use App\Http\Controllers\API\MessageController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\SkillController;
 use App\Http\Controllers\API\WorkExperienceController;
@@ -132,6 +134,29 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/{id}', 'show');
             Route::post('update', 'update');
             Route::get('delete/{id}', 'delete');
+        });
+    });
+
+    Route::prefix('page')->group(function () {
+        Route::controller(EmployerController::class)->group(function () {
+            Route::post('list', 'index');
+            Route::get('/{id}', 'show');
+            Route::post('create', 'store');
+            Route::post('update', 'update');
+            Route::get('delete/{id}', 'delete');
+        });
+    });
+
+    Route::prefix('chats')->group(function () {
+        Route::controller(MessageController::class)->group(function () {
+            Route::post('list', 'chats');
+            Route::get('/{id}', 'show');
+            Route::post('create', 'store');
+            Route::post('update', 'update');
+            Route::get('delete/{id}', 'delete');
+            Route::post('chat/{id}', 'chat');
+            Route::get('message-seen/{id}', 'seenMessage');
+            Route::get('chat-clear/{id}', 'chatClear');
         });
     });
 });
