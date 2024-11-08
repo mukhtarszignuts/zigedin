@@ -4,10 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Models\User;
 use App\Models\Message;
+use App\Events\NewMessage;
+use App\Events\MessageSend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ListingApiTrait;
-use App\Events\NewMessage;
 
 class MessageController extends Controller
 {
@@ -113,9 +114,10 @@ class MessageController extends Controller
             $data['chat'] = $chat;
         }
         $data['msg'] = $msg;
-       
-        broadcast(new NewMessage($message))->toOthers();
-        // broadcast(new NewMessage($msg))->toOthers();
+        // public 
+        broadcast(new NewMessage($chat));
+        // private 
+        broadcast(new MessageSend($chat));
 
         return ok('Message create successfully.',$data);
     }
@@ -281,6 +283,27 @@ class MessageController extends Controller
             $msg = "message seen successfully";
         } else {
             $msg = "No messages found to update.";
+        }
+
+        return ok($msg);
+    }
+
+    /**
+     *  Chat Clear
+     */
+    public function chatClear($id)
+    {
+        $updated = Message::where(function ($query) use ($id) {
+            $query->where('receiver_id', $id)->where('sender_id', auth()->user()->id);
+        })
+        ->orWhere(function ($query) use ($id) {
+            $query->where('receiver_id', auth()->user()->id)->where('sender_id', $id);
+        })->delete();
+
+        if ($updated > 0) {
+            $msg = "Chat clear successfully.";
+        } else {
+            $msg = "No messages found to clear.";
         }
 
         return ok($msg);

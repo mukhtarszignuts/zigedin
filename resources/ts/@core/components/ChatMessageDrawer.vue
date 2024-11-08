@@ -59,20 +59,11 @@ interface Member {
 
 }
 
-const usersList = ref<Member[]>([]);
 
-const count = ref<number>(0);
-
-const perPage = ref<number>(10);
-const currentPage = ref(1);
-const sortKey = ref<string>("created_at");
-const sortOrder = ref<string>("desc");
-const search = ref<string>("");
-const isShareProjectDialogVisible = ref<boolean>(false);
+const isChatMessageDialogVisible = ref<boolean>(false);
 const senderData = ref<any>();
 
 const openDrawer = async()=>{
-  // getUserList();
   isLeftSidebarOpen.value=true
   isNavDrawerOpen.value = true
 }
@@ -81,7 +72,6 @@ const openDrawer = async()=>{
 const openMessage = async (data:any) => {
   senderData.value=data
   console.log(senderData.value,'open message');
-  isShareProjectDialogVisible.value = true;
     
 }
 
@@ -94,7 +84,6 @@ const msg = ref("");
 
  const openChatOfContact = async (userId: TypeChatContact["id"]) => {
 
-  
   await store.getChat(userId);
 
   // Reset message input
@@ -102,20 +91,16 @@ const msg = ref("");
 
   // Set unseenMsgs to 0
   const contact = store.chatsContacts.find((c) => c.id === userId);
-
-  // if (contact) contact.chat.unseenMsgs = 0;
+  
   // calling api for msg seen
   if (contact) contact.chat.unseenMsgs = 0;
 
   // if smAndDown =>  Close Chat & Contacts left sidebar
   if (vuetifyDisplays.smAndDown.value) isLeftSidebarOpen.value = false;
-
-  // Scroll to bottom
   nextTick(() => {
     // scrollToBottomInChatLog();
   });
-
-  isShareProjectDialogVisible.value=true;
+  isChatMessageDialogVisible.value=true;
 };
 
 
@@ -131,7 +116,7 @@ watch(q, (val) => store.fetchChatsAndContacts(val), { immediate: true });
   <template v-if="!isLessThanOverlayNavBreakpoint(windowWidth)">
     <VBtn icon size="small" class="app-customizer-toggler rounded-s-lg rounded-0" style="z-index: 1001;"
       @click="openDrawer">
-      <VIcon size="22" icon="tabler-settings" />
+      <VIcon size="22" icon="tabler-message" />
     </VBtn>
 
     <VNavigationDrawer v-model="isNavDrawerOpen" temporary border="0" location="end" width="400" :scrim="false"
@@ -152,35 +137,6 @@ watch(q, (val) => store.fetchChatsAndContacts(val), { immediate: true });
       <VDivider />
 
       <PerfectScrollbar tag="ul" :options="{ wheelPropagation: false }">
-        <!-- SECTION MISC -->
-        <!-- <CustomizerSection> -->
-        <!-- 👉 RTL -->
-        <!-- <div class="d-flex align-center justify-space-between">
-            <AppTextField v-model="search" class="error-custom search-input w-100 ms-auto" placeholder="Search"
-              @input="searchUser(search)" />
-          </div> -->
-        <!-- 
-          <VCardText>
-            <VList class="card-list">
-              <VListItem v-for="data in usersList" :key="data?.first_name" @click="openMessage(data)">
-                <template #prepend>
-                  <VAvatar size="38" :variant="!data?.avtar ? 'tonal' : undefined" :color="'secondary'">
-                    <VImg v-if="data?.avtar" :src="data?.avtar" />
-                    <span class="" v-else>{{ avatarText(data?.first_name) }}</span>
-                  </VAvatar>
-                </template>
-<VListItemTitle class="font-weight-medium">
-  {{ data.first_name }} {{ data.last_name }}
-</VListItemTitle>
-<VListItemSubtitle>{{ data?.email }} </VListItemSubtitle>
-</VListItem>
-</VList>
-</VCardText> -->
-
-
-        <!-- </CustomizerSection> -->
-        <!-- !SECTION -->
-
         <CustomizerSection>
           <ChatLeftSidebarContent v-model:isDrawerOpen="isLeftSidebarOpen" v-model:search="q"
             @open-chat-of-contact="openChatOfContact" @show-user-profile="false" @close="isLeftSidebarOpen = false" />
@@ -189,8 +145,8 @@ watch(q, (val) => store.fetchChatsAndContacts(val), { immediate: true });
     </VNavigationDrawer>
   </template>
 
-  <ChatMessageBox v-if="isShareProjectDialogVisible" v-model:isDialogVisible="isShareProjectDialogVisible"
-    @close-dialog="isShareProjectDialogVisible=false" />
+  <ChatMessageBox v-if="isChatMessageDialogVisible" v-model:isDialogVisible="isChatMessageDialogVisible"
+    @close-dialog="isChatMessageDialogVisible=false" />
 </template>
 
 <style lang="scss">

@@ -46,8 +46,7 @@ const isChatContactActive = computed(() => {
     </div>
     <div v-if="props.isChatContact && 'chat' in props.user" class="d-flex flex-column align-self-start">
       <span class="d-block text-sm text-disabled whitespace-no-wrap">
-        {{ formatDateToMonthShort(props.user.chat.lastMessage.time) }}
-        
+        {{ props.user?.chat?.lastMessage?.time ? formatDateToMonthShort(props.user.chat.lastMessage.time):'' }}
       </span>
       <VBadge v-if="props.user.chat.unseenMsgs" color="error" inline :content="props.user.chat.unseenMsgs"
         class="ms-auto" />

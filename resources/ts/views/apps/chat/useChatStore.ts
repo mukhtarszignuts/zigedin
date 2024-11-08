@@ -24,18 +24,12 @@ export const useChatStore = defineStore("chat", {
   }),
   actions: {
     async fetchChatsAndContacts(q: string) {
-      // const { data } = await axios.get("/apps/chat/chats-and-contacts", {
-      //   params: { q },
-      // });
       const { data } = await axios.post("/chats/list", {
         search: q,
       });
-      console.log("response", data);
-
+    
       const { chats, contacts, profileUser } = data.data;
-
       const profileUserData: ChatContact = profileUser;
-
       this.chatsContacts = chats;
       this.contacts = contacts;
       this.profileUser = profileUserData;
@@ -52,10 +46,10 @@ export const useChatStore = defineStore("chat", {
       //! Need to change this
 
       const clear = await axios.get(`/chats/chat-clear/${userId}`);
-
-      console.log("Chat Clear", clear);
+      //! Need to check after clear chat 
       this.getChat(userId);
       this.fetchChatsAndContacts("");
+      // this.activeChat = null
     },
 
     async sendMsg(message: ChatMessage["message"]) {
@@ -72,8 +66,6 @@ export const useChatStore = defineStore("chat", {
 
       const { msg, chat }: { msg: ChatMessage; chat: ChatOut } = data.data;
 
-      // console.log(this.activeChat,'active chat data');
-      // console.log(chat,'data response chat');
       // ? If it's not undefined => New chat is created (Contact is not in list of chats)
 
       if (chat !== undefined) {
@@ -114,8 +106,9 @@ export const useChatStore = defineStore("chat", {
       }) as ChatContactWithChat;
       
       // console.log("chats contacts", contact);
-
-      contact.chat.lastMessage = msg;
+      if(contact.chat.lastMessage.length > 0){
+        contact.chat.lastMessage = msg;
+      }
     },
   },
 });

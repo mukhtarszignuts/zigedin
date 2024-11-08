@@ -35,7 +35,7 @@ export const formatDate = (value: string, formatting: Intl.DateTimeFormatOptions
  * @param {String} value date to format
  * @param {Boolean} toTimeForCurrentDay Shall convert to time if day is today/current
  */
-export const formatDateToMonthShort = (value: string, toTimeForCurrentDay = true) => {
+export const formatDateToMonthShort = (value: string, toTimeForCurrentDay: boolean = true) => {
   const date = new Date(value)
   let formatting: Record<string, string> = { month: 'short', day: 'numeric' }
 

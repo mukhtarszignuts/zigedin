@@ -22,10 +22,10 @@ const echo = new Echo({
     enabledTransports: ['ws', 'wss'],
     authEndpoint: '/broadcasting/auth',
     auth: {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('auth-token')}`
-        }
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem('auth-token')}`
     }
+}
 });
 
 export default echo;

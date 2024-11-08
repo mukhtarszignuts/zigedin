@@ -1,13 +1,14 @@
 <script setup lang="ts">
 
 import ChatLog from '@/views/apps/chat/ChatLog.vue'
-import { useChat } from '@/views/apps/chat/useChat'
+// import { useChat } from '@/views/apps/chat/useChat'
 import { useChatStore } from '@/views/apps/chat/useChatStore'
 import { useResponsiveLeftSidebar } from '@core/composable/useResponsiveSidebar'
 import { avatarText } from '@core/utils/formatters'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useDisplay, useTheme } from 'vuetify'
 import echo from "@/echo";
+
 
 interface Props {
     isDialogVisible: boolean,
@@ -31,7 +32,7 @@ const store = useChatStore();
 const { isLeftSidebarOpen } = useResponsiveLeftSidebar(
   vuetifyDisplays.smAndDown
 );
-const { resolveAvatarBadgeVariant } = useChat();
+// const { resolveAvatarBadgeVariant } = useChat();
 
 // Perfect scrollbar
 const chatLogPS = ref<any>(null);
@@ -56,6 +57,24 @@ const startConversation = () => {
 // Chat message
 const msg = ref("");
 
+const moreList = [
+  { title: 'Clear Chat', value: 'clearchat' ,action:'clearchat'},
+]
+
+const handleClick = (action:string,id:any) =>{
+  if (action === "clearchat") {
+    clearChat(id);
+  }
+}
+
+// clear chat
+const clearChat = async (id:any) => {
+  // Reset message input
+  msg.value = "";
+  await store.chatClear(id);
+  scrollToBottomInChatLog();
+}
+
 const sendMessage = async () => {
   if (!msg.value) return;
   
@@ -64,10 +83,47 @@ const sendMessage = async () => {
   // Reset message input
   msg.value = "";
 
-  scrollToBottomInChatLog();
   // Scroll to bottom
- 
+  scrollToBottomInChatLog();
 };
+
+const sendTypingEvent = () => {
+  
+    echo.private(`MessageSend.${store.activeChat?.contact.id}`).whisper("typing", {
+        userID: store.profileUser?.id,
+    });    
+
+    
+};
+
+const isUserTyping = ref(false);
+const isUserTypingTimer = ref<any>(null);
+
+
+// private chennal if exits then leave it
+echo.leave(`MessageSend.${store.profileUser?.id}`);
+
+echo.private(`MessageSend.${store.profileUser?.id}`)
+     .listen('MessageSend', (e:any) => {
+      if (store.activeChat?.chat?.messages) {
+        
+        if(e.message.senderId==store.activeChat.contact?.id){
+          store.activeChat?.chat?.messages.push(e.message);
+          scrollToBottomInChatLog();
+        }
+        console.log('MessageSend event received:', e.message);
+        }
+      }) .listenForWhisper("typing", (response:any) => {   
+                     
+          isUserTyping.value = response.userID === store.activeChat?.contact.id;
+          if (isUserTypingTimer.value) {
+              clearTimeout(isUserTypingTimer.value);
+          }
+          isUserTypingTimer.value = setTimeout(() => {
+              isUserTyping.value = false;
+          }, 1000);
+});
+
 
 
 // file input
@@ -77,31 +133,7 @@ onMounted(() => {
   scrollToBottomInChatLog();
 });
 
-   // Listen for new messages on the Echo channel
-   echo.channel(`chat.${store.profileUser?.id}`)
-        .listen('NewMessage', (e:any) => {
-          const messageTime = new Date(e.message.created_at).toLocaleString('en-US', {
-            timeZone: 'GMT',
-            hour12: false,
-          });
 
-          const msg = {
-            message: e.message.message,
-            time: messageTime,
-            senderId: e.message.receiver_id,
-            feedback: {
-              isSent: e.message.is_sent,
-              isDelivered: e.message.is_delivered,
-              isSeen: e.message.is_seen,
-            }
-          };
-
-          if (store.activeChat?.chat?.messages) {
-            store.activeChat.chat.messages.push(msg);
-            // scrollToBottomInChatLog(); // Scroll to the bottom after each new message
-            console.log('NewMessage event received:', msg);
-          }
-        });
 </script>
 
 <template>
@@ -160,7 +192,17 @@ onMounted(() => {
                 </IconBtn>
               </div>
 
-              <MoreBtn :menu-list="[]" density="comfortable" color="undefined" />
+              <IconBtn density="compact" color="disabled">
+                <VIcon icon="tabler-dots-vertical" />
+
+                <VMenu v-if="moreList" activator="parent">
+                  <VList>
+                    <VListItem v-for="(item, index) in moreList" :key="index" :title="item.title"
+                      @click="handleClick(item.action,store.activeChat.contact.id)" />
+                  </VList>
+                </VMenu>
+              </IconBtn>
+
             </div>
 
             <VDivider />
@@ -173,7 +215,8 @@ onMounted(() => {
             <!-- Message form -->
             <VForm class="chat-log-message-form mb-5 mx-5" @submit.prevent="sendMessage">
               <VTextField :key="store.activeChat?.contact.id" v-model="msg" variant="solo" class="chat-message-input"
-                placeholder="Type your message..." density="default" autofocus>
+                placeholder="Type your message..." density="default" autofocus @keydown="sendTypingEvent">
+
                 <template #append-inner>
                   <IconBtn>
                     <VIcon icon="tabler-microphone" />
@@ -188,8 +231,8 @@ onMounted(() => {
                   </VBtn>
                 </template>
               </VTextField>
-
               <input ref="refInputEl" type="file" name="file" accept=".jpeg,.png,.jpg,GIF" hidden>
+              <span class="p-0 m-0" v-if="isUserTyping">typing...</span>
             </VForm>
           </div>
 

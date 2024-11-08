@@ -2,21 +2,19 @@
 
 namespace App\Events;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class NewMessage implements ShouldBroadcastNow
+class MessageSend implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $chat;
+
     /**
      * Create a new event instance.
      */
@@ -33,7 +31,7 @@ class NewMessage implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel('chat.' . $this->chat['userId']),
+            new PrivateChannel('MessageSend.' . $this->chat['userId']),
         ];
     }
 
